@@ -100,7 +100,7 @@
     </div>
 
     <div class="status" id="status">
-        Loading community stream...
+        Connecting to stream server...
     </div>
 
     <div class="card">
@@ -126,48 +126,50 @@
         const video = document.getElementById("video");
         const status = document.getElementById("status");
 
-        // Array of community stream fallback links since these URLs expire or break quickly
+        // Secure HTTPS mirror tracks used by community IPTV networks
         const streamURLs = [
-            "http://113.192.47",
-            "https://pages.dev"
+            "https://cloudplay-sonyliv.pages.dev/ten3hd.m3u8",
+            "https://cdn.rangdhanu.live/SonyTen3/video.m3u8"
         ];
         
         let currentStreamIndex = 0;
         let hls = null;
 
         function loadStream(url) {
-            status.textContent = `Attempting stream source ${currentStreamIndex + 1}...`;
+            status.textContent = `Testing stream route ${currentStreamIndex + 1}...`;
             
             if (Hls.isSupported()) {
                 if (hls) {
                     hls.destroy();
                 }
                 hls = new Hls({
-                    maxMaxBufferLength: 10,
-                    enableWorker: true
+                    maxMaxBufferLength: 15,
+                    enableWorker: true,
+                    lowLatencyMode: true
                 });
                 hls.loadSource(url);
                 hls.attachMedia(video);
                 
                 hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    status.textContent = "Stream ready. Press play if it doesn't autoplay!";
+                    status.textContent = "Stream connected successfully! Click play if video is muted.";
                 });
                 
                 hls.on(Hls.Events.ERROR, (event, data) => {
                     if (data.fatal) {
+                        console.warn("HLS fatal error encountered:", data.details);
                         handleError();
                     }
                 });
             } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
                 video.src = url;
                 video.addEventListener('loadedmetadata', () => {
-                    status.textContent = "Stream ready.";
+                    status.textContent = "Stream connected.";
                 });
                 video.addEventListener('error', () => {
                     handleError();
                 });
             } else {
-                status.textContent = "HLS streaming is not supported by this browser.";
+                status.textContent = "HLS video format is not natively supported on this browser.";
             }
         }
 
@@ -176,11 +178,11 @@
             if (currentStreamIndex < streamURLs.length) {
                 loadStream(streamURLs[currentStreamIndex]);
             } else {
-                status.textContent = "Stream currently offline. Community links might have expired.";
+                status.textContent = "All open-source streams are offline. Please refresh or update source links.";
             }
         }
 
-        // Initialize with the first stream URL
+        // Run initial loading sequence
         loadStream(streamURLs[currentStreamIndex]);
     </script>
 </body>
