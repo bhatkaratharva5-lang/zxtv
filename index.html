@@ -1,50 +1,199 @@
-const video = document.getElementById("video");
-const status = document.getElementById("status");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZxTV | Sony Sports Ten 3</title>
+    <!-- FIXED: Robust, updated complete CDN dependency path for Hls.js -->
+    <script src="https://jsdelivr.net"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 15px;
+            background: #f1f5f9;
+            font-family: Arial, sans-serif;
+            color: #334155;
+        }
+        .header {
+            background: white;
+            border-radius: 22px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px #00000008;
+        }
+        .header h2 {
+            font-size: 18px;
+            margin: 0;
+        }
+        .live {
+            background: #fff0f0;
+            color: #e53945;
+            padding: 10px 13px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .player {
+            background: black;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 22px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .status {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 13px;
+            padding: 10px;
+        }
+        .card {
+            background: white;
+            border-radius: 22px;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px #00000008;
+        }
+        .card h3 {
+            font-size: 15px;
+            color: #64748b;
+            margin: 0 0 25px;
+        }
+        .btn {
+            display: block;
+            background: #2864e8;
+            color: white;
+            text-decoration: none;
+            padding: 19px 10px;
+            border-radius: 18px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
 
-// Your Cloudflare Worker proxy deployment URL
-const proxyBaseUrl = "https://workers.dev"; 
+    <header class="header">
+        <h2>📺 Sony Sports Ten 3</h2>
+        <span class="live">🔴 LIVE</span>
+    </header>
 
-// Targeted the exact Sony Ten 3 ID channel route found on that server pool
-const targetStreamUrl = "http://42.98.239.149:9981/stream/channelid/704909020";
+    <div class="player">
+        <video id="video" controls playsinline autoplay muted></video>
+    </div>
 
-// Safely route the raw backend data pool inside your secure tunnel
-const securedProxyURL = `${proxyBaseUrl}?url=${encodeURIComponent(targetStreamUrl)}`;
+    <div class="status" id="status">
+        Connecting to stream server...
+    </div>
 
-function loadStream(url) {
-    status.textContent = "Connecting to safe stream network route...";
-    
-    if (typeof Hls !== 'undefined' && Hls.isSupported()) {
-        const hls = new Hls({
-            maxMaxBufferLength: 15,
-            enableWorker: true,
-            lowLatencyMode: true,
-            // Automatically wraps internal chunk signals through your proxy worker
-            xhrSetup: function (xhr, internalUrl) {
-                if (!internalUrl.startsWith(proxyBaseUrl)) {
-                    const freshUrl = `${proxyBaseUrl}?url=${encodeURIComponent(internalUrl)}`;
-                    xhr.open('GET', freshUrl, true);
+    <div class="card">
+        <h3>📢 CLICK BELOW TO SUPPORT!</h3>
+        <a class="btn" href="YOUR_SUPPORT_LINK">
+            💰 Click Here to Support Us
+        </a>
+    </div>
+
+    <div class="card">
+        <h3>📢 FOLLOW US ON WHATSAPP!</h3>
+        <a class="btn" href="YOUR_WHATSAPP_LINK">
+            ☘️ Join WhatsApp Channel
+        </a>
+    </div>
+
+    <footer class="footer">
+        <h3>ZxTV 📺</h3>
+        <p>Live TV Streaming Website</p>
+    </footer>
+
+    <script>
+        const video = document.getElementById("video");
+        const status = document.getElementById("status");
+
+        // ⚠ REPLACE this placeholder string with your specific Cloudflare Worker endpoint URL
+        const proxyBaseUrl = "https://f5e01c62.my-cors-proxy.workers.dev"; 
+
+        // Active production stream mirror targets for Sony Sports Ten 3 Hindi
+        const streamSources = [
+            "http://42.98.239",
+            "https://rangdhanu.live"
+        ];
+        
+        let currentSourceIndex = 0;
+        let hls = null;
+
+        function loadStream(targetStreamUrl) {
+            // Secure cross-origin encapsulation wrap via your cloud pipeline mapping
+            const securedProxyURL = `${proxyBaseUrl}?url=${encodeURIComponent(targetStreamUrl)}`;
+            status.textContent = `Processing video route ${currentSourceIndex + 1}...`;
+            
+            if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+                if (hls) {
+                    hls.destroy();
                 }
-            }
-        });
-        hls.loadSource(url);
-        hls.attachMedia(video);
-        
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
-            status.textContent = "Connected successfully! Tap player to unmute audio channel.";
-        });
-        
-        hls.on(Hls.Events.ERROR, (event, data) => {
-            if (data.fatal) {
-                status.textContent = "Stream offline or server IP has closed connections. Update host targets.";
-            }
-        });
-    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-        video.src = url;
-        status.textContent = "Connected successfully.";
-    } else {
-        status.textContent = "HLS standard rendering is unsupported on this web browser application.";
-    }
-}
 
-// Boot stream script logic
-loadStream(securedProxyURL);
+                hls = new Hls({
+                    maxMaxBufferLength: 15,
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                    // Securely forward internal video chunks (.ts payload data fragments) through proxy
+                    xhrSetup: function (xhr, url) {
+                        if (!url.startsWith(proxyBaseUrl)) {
+                            const proxyWrappedUrl = `${proxyBaseUrl}?url=${encodeURIComponent(url)}`;
+                            xhr.open('GET', proxyWrappedUrl, true);
+                        }
+                    }
+                });
+
+                hls.loadSource(securedProxyURL);
+                hls.attachMedia(video);
+                
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    status.textContent = "Connected successfully! Tap play/unmute if video remains paused.";
+                });
+                
+                hls.on(Hls.Events.ERROR, (event, data) => {
+                    if (data.fatal) {
+                        console.warn("HLS path connection interrupted:", data.details);
+                        handleFallback();
+                    }
+                });
+            } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+                video.src = securedProxyURL;
+                status.textContent = "Connected successfully.";
+            } else {
+                status.textContent = "Your active web browser software context doesn't support live HLS format streaming engines.";
+            }
+        }
+
+        function handleFallback() {
+            currentSourceIndex++;
+            if (currentSourceIndex < streamSources.length) {
+                loadStream(streamSources[currentSourceIndex]);
+            } else {
+                status.textContent = "Streaming source network error. The media servers might be offline or undergoing maintenance.";
+            }
+        }
+
+        // Initialize secure decoding timeline context loop
+        loadStream(streamSources[currentSourceIndex]);
+    </script>
+</body>
+</html>
