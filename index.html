@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZxTV | Sony Sports Ten 3</title>
+    <!-- Fixed CDN delivery script for the custom player library -->
     <script src="https://jsdelivr.net"></script>
     <style>
         * {
@@ -126,10 +127,10 @@
         const video = document.getElementById("video");
         const status = document.getElementById("status");
 
-        // Secure HTTPS mirror tracks used by community IPTV networks
+        // Targeted single-channel source configurations
         const streamURLs = [
-            "https://cloudplay-sonyliv.pages.dev/ten3hd.m3u8",
-            "https://cdn.rangdhanu.live/SonyTen3/video.m3u8"
+            "https://pages.dev",
+            "https://rangdhanu.live"
         ];
         
         let currentStreamIndex = 0;
@@ -138,12 +139,12 @@
         function loadStream(url) {
             status.textContent = `Testing stream route ${currentStreamIndex + 1}...`;
             
-            if (Hls.isSupported()) {
+            if (typeof Hls !== 'undefined' && Hls.isSupported()) {
                 if (hls) {
                     hls.destroy();
                 }
                 hls = new Hls({
-                    maxMaxBufferLength: 15,
+                    maxMaxBufferLength: 10,
                     enableWorker: true,
                     lowLatencyMode: true
                 });
@@ -151,25 +152,24 @@
                 hls.attachMedia(video);
                 
                 hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    status.textContent = "Stream connected successfully! Click play if video is muted.";
+                    status.textContent = "Connected! Tap the video layer to unmute audio.";
                 });
                 
                 hls.on(Hls.Events.ERROR, (event, data) => {
                     if (data.fatal) {
-                        console.warn("HLS fatal error encountered:", data.details);
                         handleError();
                     }
                 });
             } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
                 video.src = url;
                 video.addEventListener('loadedmetadata', () => {
-                    status.textContent = "Stream connected.";
+                    status.textContent = "Connected successfully.";
                 });
                 video.addEventListener('error', () => {
                     handleError();
                 });
             } else {
-                status.textContent = "HLS video format is not natively supported on this browser.";
+                status.textContent = "HLS video decoding is unsupported on this browser platform.";
             }
         }
 
@@ -178,11 +178,11 @@
             if (currentStreamIndex < streamURLs.length) {
                 loadStream(streamURLs[currentStreamIndex]);
             } else {
-                status.textContent = "All open-source streams are offline. Please refresh or update source links.";
+                status.textContent = "All temporary stream mirrors are offline. The server links may have expired.";
             }
         }
 
-        // Run initial loading sequence
+        // Initialize channel stream
         loadStream(streamURLs[currentStreamIndex]);
     </script>
 </body>
