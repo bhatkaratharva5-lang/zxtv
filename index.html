@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZxTV | Sony Sports Ten 3</title>
-    <!-- Fixed CDN delivery script for the custom player library -->
+    <!-- Fixed custom stream driver engine -->
     <script src="https://jsdelivr.net"></script>
     <style>
         * {
@@ -127,24 +127,21 @@
         const video = document.getElementById("video");
         const status = document.getElementById("status");
 
-        // Targeted single-channel source configurations
-        const streamURLs = [
-            "https://pages.dev",
-            "https://rangdhanu.live"
-        ];
+        // ⚠ PASTE your exact deployed Cloudflare Worker URL right here:
+        const proxyBaseUrl = "https://workers.dev"; 
+
+        // Target stream link
+        const targetStreamUrl = "https://pages.dev";
         
-        let currentStreamIndex = 0;
-        let hls = null;
+        // Combines everything together through your custom secure proxy route
+        const securedProxyURL = `${proxyBaseUrl}?url=${encodeURIComponent(targetStreamUrl)}`;
 
         function loadStream(url) {
-            status.textContent = `Testing stream route ${currentStreamIndex + 1}...`;
+            status.textContent = "Connecting to safe stream route...";
             
             if (typeof Hls !== 'undefined' && Hls.isSupported()) {
-                if (hls) {
-                    hls.destroy();
-                }
-                hls = new Hls({
-                    maxMaxBufferLength: 10,
+                const hls = new Hls({
+                    maxMaxBufferLength: 15,
                     enableWorker: true,
                     lowLatencyMode: true
                 });
@@ -152,38 +149,24 @@
                 hls.attachMedia(video);
                 
                 hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    status.textContent = "Connected! Tap the video layer to unmute audio.";
+                    status.textContent = "Connected! Tap player to unmute audio channel.";
                 });
                 
                 hls.on(Hls.Events.ERROR, (event, data) => {
                     if (data.fatal) {
-                        handleError();
+                        status.textContent = "Source stream link dropped or offline. Update target URL value.";
                     }
                 });
             } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
                 video.src = url;
-                video.addEventListener('loadedmetadata', () => {
-                    status.textContent = "Connected successfully.";
-                });
-                video.addEventListener('error', () => {
-                    handleError();
-                });
+                status.textContent = "Connected successfully.";
             } else {
-                status.textContent = "HLS video decoding is unsupported on this browser platform.";
+                status.textContent = "HLS video layout rendering is unsupported on this browser.";
             }
         }
 
-        function handleError() {
-            currentStreamIndex++;
-            if (currentStreamIndex < streamURLs.length) {
-                loadStream(streamURLs[currentStreamIndex]);
-            } else {
-                status.textContent = "All temporary stream mirrors are offline. The server links may have expired.";
-            }
-        }
-
-        // Initialize channel stream
-        loadStream(streamURLs[currentStreamIndex]);
+        // Boot player logic
+        loadStream(securedProxyURL);
     </script>
 </body>
 </html>
