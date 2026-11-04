@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZxTV | Sony Sports Ten 3</title>
-    <!-- Fixed custom stream driver engine -->
+    <!-- Robust full path to the video library engine -->
     <script src="https://jsdelivr.net"></script>
     <style>
         * {
@@ -127,46 +127,73 @@
         const video = document.getElementById("video");
         const status = document.getElementById("status");
 
-        // ⚠ PASTE your exact deployed Cloudflare Worker URL right here:
+        // ⚠ PASTE your working Cloudflare Worker URL here
         const proxyBaseUrl = "https://workers.dev"; 
 
-        // Target stream link
-        const targetStreamUrl = "https://pages.dev";
+        // Targeted backup stream mirrors for Sony Sports Ten 3 Hindi
+        const streamSources = [
+            "https://pages.dev",
+            "https://rangdhanu.live"
+        ];
         
-        // Combines everything together through your custom secure proxy route
-        const securedProxyURL = `${proxyBaseUrl}?url=${encodeURIComponent(targetStreamUrl)}`;
+        let currentSourceIndex = 0;
+        let hls = null;
 
-        function loadStream(url) {
-            status.textContent = "Connecting to safe stream route...";
+        function loadStream(targetStreamUrl) {
+            // Encode the target URL into our proxy layout
+            const securedProxyURL = `${proxyBaseUrl}?url=${encodeURIComponent(targetStreamUrl)}`;
+            status.textContent = `Processing video route ${currentSourceIndex + 1}...`;
             
             if (typeof Hls !== 'undefined' && Hls.isSupported()) {
-                const hls = new Hls({
+                if (hls) {
+                    hls.destroy();
+                }
+
+                hls = new Hls({
                     maxMaxBufferLength: 15,
                     enableWorker: true,
-                    lowLatencyMode: true
+                    lowLatencyMode: true,
+                    // FORCE internal media segment chunks (.ts fragments) through your proxy too
+                    xhrSetup: function (xhr, url) {
+                        if (!url.startsWith(proxyBaseUrl) && url.includes('.ts')) {
+                            const newUrl = `${proxyBaseUrl}?url=${encodeURIComponent(url)}`;
+                            xhr.open('GET', newUrl, true);
+                        }
+                    }
                 });
-                hls.loadSource(url);
+
+                hls.loadSource(securedProxyURL);
                 hls.attachMedia(video);
                 
                 hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    status.textContent = "Connected! Tap player to unmute audio channel.";
+                    status.textContent = "Connected successfully! Tap play/unmute if video remains paused.";
                 });
                 
                 hls.on(Hls.Events.ERROR, (event, data) => {
                     if (data.fatal) {
-                        status.textContent = "Source stream link dropped or offline. Update target URL value.";
+                        console.warn("HLS path failure:", data.details);
+                        handleFallback();
                     }
                 });
             } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-                video.src = url;
+                video.src = securedProxyURL;
                 status.textContent = "Connected successfully.";
             } else {
-                status.textContent = "HLS video layout rendering is unsupported on this browser.";
+                status.textContent = "Your active web browser doesn't support live HLS streaming format engines.";
             }
         }
 
-        // Boot player logic
-        loadStream(securedProxyURL);
+        function handleFallback() {
+            currentSourceIndex++;
+            if (currentSourceIndex < streamSources.length) {
+                loadStream(streamSources[currentSourceIndex]);
+            } else {
+                status.textContent = "Streaming source error. The temporary community links might have expired.";
+            }
+        }
+
+        // Initialize connection protocol
+        loadStream(streamSources[currentSourceIndex]);
     </script>
 </body>
 </html>
