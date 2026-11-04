@@ -4,7 +4,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZxTV - Sony Sports Ten 3</title>
+
+<title>ZxTV | Sony Sports Ten 3</title>
 
 <style>
 * {
@@ -13,65 +14,70 @@
 
 body {
   margin: 0;
+  padding: 15px;
   font-family: Arial, sans-serif;
   background: #f1f5f9;
   color: #334155;
-  padding: 15px;
 }
 
+/* Header */
 .header {
-  background: white;
+  background: #ffffff;
   border-radius: 25px;
   padding: 20px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 35px;
+  justify-content: space-between;
+  margin-bottom: 30px;
   box-shadow: 0 2px 10px #00000008;
 }
 
 .header h2 {
-  font-size: 20px;
+  font-size: 18px;
   margin: 0;
 }
 
 .live {
   background: #fff0f2;
   color: #dc3545;
-  padding: 10px 16px;
+  padding: 10px 14px;
   border-radius: 25px;
   font-size: 12px;
   font-weight: bold;
+  white-space: nowrap;
 }
 
+/* Player */
 .player {
-  background: black;
-  border-radius: 25px;
-  overflow: hidden;
   width: 100%;
   aspect-ratio: 16 / 9;
-  margin-bottom: 35px;
+  background: #000000;
+  border-radius: 25px;
+  overflow: hidden;
+  margin-bottom: 30px;
 }
 
-video {
+.player iframe {
   width: 100%;
   height: 100%;
+  border: none;
   display: block;
 }
 
+/* Cards */
 .card {
-  background: white;
-  padding: 30px 20px;
+  background: #ffffff;
   border-radius: 25px;
+  padding: 30px 20px;
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   box-shadow: 0 2px 10px #00000008;
 }
 
 .card h3 {
-  font-size: 16px;
   color: #64748b;
-  margin-bottom: 30px;
+  font-size: 15px;
+  margin: 0 0 25px;
 }
 
 .btn {
@@ -79,51 +85,66 @@ video {
   background: #2864e8;
   color: white;
   text-decoration: none;
-  padding: 20px 10px;
+  padding: 18px 12px;
   border-radius: 20px;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: bold;
 }
 
+/* Footer */
 .footer {
   text-align: center;
-  padding: 30px;
+  padding: 25px 10px;
   color: #64748b;
+  font-size: 14px;
+}
+
+.footer h3 {
+  color: #334155;
+  margin-bottom: 8px;
 }
 </style>
 </head>
 
 <body>
 
+<!-- Header -->
 <div class="header">
   <h2>📺 Sony Sports Ten 3</h2>
   <div class="live">🔴 LIVE NOW</div>
 </div>
 
+<!-- Live Player -->
 <div class="player">
-  <video controls autoplay playsinline>
-    <source src="YOUR_AUTHORIZED_STREAM_URL.m3u8"
-            type="application/x-mpegURL">
-    Your browser does not support this video.
-  </video>
+  <iframe
+    src="https://cinearena2.pages.dev/?id=ios-hindi"
+    title="Live TV Player"
+    allow="autoplay; fullscreen; picture-in-picture"
+    allowfullscreen>
+  </iframe>
 </div>
 
+<!-- Support -->
 <div class="card">
   <h3>📢 CLICK BELOW TO SUPPORT!</h3>
+
   <a class="btn" href="YOUR_SUPPORT_LINK">
     💰 Click Here to Support Us
   </a>
 </div>
 
+<!-- WhatsApp -->
 <div class="card">
   <h3>📢 FOLLOW US ON WHATSAPP!</h3>
+
   <a class="btn" href="YOUR_WHATSAPP_LINK">
     ☘️ Join WhatsApp Channel
   </a>
 </div>
 
+<!-- Footer -->
 <div class="footer">
-  <b>ZxTV</b> 📺
+  <h3>ZxTV 📺</h3>
   <p>Live TV Streaming Website</p>
 </div>
 
