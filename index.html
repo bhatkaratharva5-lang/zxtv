@@ -1,184 +1,187 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZxTV | Sony Sports Ten 3</title>
-
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-
-<style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  padding: 15px;
-  background: #f1f5f9;
-  font-family: Arial, sans-serif;
-  color: #334155;
-}
-
-.header {
-  background: white;
-  border-radius: 22px;
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-  box-shadow: 0 2px 10px #00000008;
-}
-
-.header h2 {
-  font-size: 18px;
-  margin: 0;
-}
-
-.live {
-  background: #fff0f0;
-  color: #e53945;
-  padding: 10px 13px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.player {
-  background: black;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  border-radius: 22px;
-  overflow: hidden;
-  margin-bottom: 30px;
-  position: relative;
-}
-
-video {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.status {
-  text-align: center;
-  color: #94a3b8;
-  font-size: 13px;
-  padding: 10px;
-}
-
-.card {
-  background: white;
-  border-radius: 22px;
-  padding: 30px 20px;
-  text-align: center;
-  margin-bottom: 25px;
-  box-shadow: 0 2px 10px #00000008;
-}
-
-.card h3 {
-  font-size: 15px;
-  color: #64748b;
-  margin: 0 0 25px;
-}
-
-.btn {
-  display: block;
-  background: #2864e8;
-  color: white;
-  text-decoration: none;
-  padding: 19px 10px;
-  border-radius: 18px;
-  font-weight: bold;
-}
-
-.footer {
-  text-align: center;
-  padding: 25px;
-  color: #64748b;
-  font-size: 14px;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZxTV | Sony Sports Ten 3</title>
+    <script src="https://jsdelivr.net"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 15px;
+            background: #f1f5f9;
+            font-family: Arial, sans-serif;
+            color: #334155;
+        }
+        .header {
+            background: white;
+            border-radius: 22px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px #00000008;
+        }
+        .header h2 {
+            font-size: 18px;
+            margin: 0;
+        }
+        .live {
+            background: #fff0f0;
+            color: #e53945;
+            padding: 10px 13px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .player {
+            background: black;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 22px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .status {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 13px;
+            padding: 10px;
+        }
+        .card {
+            background: white;
+            border-radius: 22px;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px #00000008;
+        }
+        .card h3 {
+            font-size: 15px;
+            color: #64748b;
+            margin: 0 0 25px;
+        }
+        .btn {
+            display: block;
+            background: #2864e8;
+            color: white;
+            text-decoration: none;
+            padding: 19px 10px;
+            border-radius: 18px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+            font-size: 14px;
+        }
+    </style>
 </head>
-
 <body>
 
-<header class="header">
-  <h2>📺 Sony Sports Ten 3</h2>
-  <span class="live">🔴 LIVE</span>
-</header>
+    <header class="header">
+        <h2>📺 Sony Sports Ten 3</h2>
+        <span class="live">🔴 LIVE</span>
+    </header>
 
-<div class="player">
-  <video id="video" controls playsinline
-         poster="">
-  </video>
-</div>
+    <div class="player">
+        <video id="video" controls playsinline autoplay muted></video>
+    </div>
 
-<div class="status" id="status">
-  Waiting for authorized stream...
-</div>
+    <div class="status" id="status">
+        Loading community stream...
+    </div>
 
-<div class="card">
-  <h3>📢 CLICK BELOW TO SUPPORT!</h3>
-  <a class="btn" href="YOUR_SUPPORT_LINK">
-    💰 Click Here to Support Us
-  </a>
-</div>
+    <div class="card">
+        <h3>📢 CLICK BELOW TO SUPPORT!</h3>
+        <a class="btn" href="YOUR_SUPPORT_LINK">
+            💰 Click Here to Support Us
+        </a>
+    </div>
 
-<div class="card">
-  <h3>📢 FOLLOW US ON WHATSAPP!</h3>
-  <a class="btn" href="YOUR_WHATSAPP_LINK">
-    ☘️ Join WhatsApp Channel
-  </a>
-</div>
+    <div class="card">
+        <h3>📢 FOLLOW US ON WHATSAPP!</h3>
+        <a class="btn" href="YOUR_WHATSAPP_LINK">
+            ☘️ Join WhatsApp Channel
+        </a>
+    </div>
 
-<footer class="footer">
-  <h3>ZxTV 📺</h3>
-  <p>Live TV Streaming Website</p>
-</footer>
+    <footer class="footer">
+        <h3>ZxTV 📺</h3>
+        <p>Live TV Streaming Website</p>
+    </footer>
 
-<script>
-const video = document.getElementById("video");
-const status = document.getElementById("status");
+    <script>
+        const video = document.getElementById("video");
+        const status = document.getElementById("status");
 
-// Add an HLS stream URL you have permission to use.
-const streamURL = "YOUR_AUTHORIZED_M3U8_URL";
+        // Array of community stream fallback links since these URLs expire or break quickly
+        const streamURLs = [
+            "http://113.192.47",
+            "https://pages.dev"
+        ];
+        
+        let currentStreamIndex = 0;
+        let hls = null;
 
-if (streamURL.startsWith("https://") &&
-    streamURL.endsWith(".m3u8")) {
+        function loadStream(url) {
+            status.textContent = `Attempting stream source ${currentStreamIndex + 1}...`;
+            
+            if (Hls.isSupported()) {
+                if (hls) {
+                    hls.destroy();
+                }
+                hls = new Hls({
+                    maxMaxBufferLength: 10,
+                    enableWorker: true
+                });
+                hls.loadSource(url);
+                hls.attachMedia(video);
+                
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    status.textContent = "Stream ready. Press play if it doesn't autoplay!";
+                });
+                
+                hls.on(Hls.Events.ERROR, (event, data) => {
+                    if (data.fatal) {
+                        handleError();
+                    }
+                });
+            } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+                video.src = url;
+                video.addEventListener('loadedmetadata', () => {
+                    status.textContent = "Stream ready.";
+                });
+                video.addEventListener('error', () => {
+                    handleError();
+                });
+            } else {
+                status.textContent = "HLS streaming is not supported by this browser.";
+            }
+        }
 
-  if (Hls.isSupported()) {
-    const hls = new Hls();
+        function handleError() {
+            currentStreamIndex++;
+            if (currentStreamIndex < streamURLs.length) {
+                loadStream(streamURLs[currentStreamIndex]);
+            } else {
+                status.textContent = "Stream currently offline. Community links might have expired.";
+            }
+        }
 
-    hls.loadSource(streamURL);
-    hls.attachMedia(video);
-
-    hls.on(Hls.Events.MANIFEST_PARSED, () => {
-      status.textContent = "Stream ready. Press play!";
-    });
-
-    hls.on(Hls.Events.ERROR, (event, data) => {
-      if (data.fatal) {
-        status.textContent = "Stream unavailable. Please try again.";
-      }
-    });
-
-  } else if (video.canPlayType(
-    "application/vnd.apple.mpegurl")) {
-
-    video.src = streamURL;
-    status.textContent = "Stream ready. Press play!";
-
-  } else {
-    status.textContent = "HLS is not supported by this browser.";
-  }
-
-} else {
-  status.textContent = "Authorized stream URL required.";
-}
-</script>
-
+        // Initialize with the first stream URL
+        loadStream(streamURLs[currentStreamIndex]);
+    </script>
 </body>
 </html>
